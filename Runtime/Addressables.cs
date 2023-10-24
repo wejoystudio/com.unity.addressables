@@ -12,6 +12,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Text;
 using UnityEngine.Networking;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -42,7 +43,7 @@ namespace UnityEngine.AddressableAssets
         /// Construct a new InvalidKeyException.
         /// </summary>
         /// <param name="key">The key that caused the exception.</param>
-        public InvalidKeyException(object key) : this(key, typeof(object)) {}
+        public InvalidKeyException(object key) : this(key, typeof(object)) { }
 
         private AddressablesImpl m_Addressables;
 
@@ -56,7 +57,7 @@ namespace UnityEngine.AddressableAssets
             Key = key;
             Type = type;
         }
-        
+
         internal InvalidKeyException(object key, Type type, AddressablesImpl addr)
         {
             Key = key;
@@ -76,7 +77,7 @@ namespace UnityEngine.AddressableAssets
             Type = type;
             MergeMode = mergeMode;
         }
-        
+
         internal InvalidKeyException(object key, Type type, Addressables.MergeMode mergeMode, AddressablesImpl addr)
         {
             Key = key;
@@ -86,16 +87,16 @@ namespace UnityEngine.AddressableAssets
         }
 
         ///<inheritdoc cref="InvalidKeyException"/>
-        public InvalidKeyException() {}
+        public InvalidKeyException() { }
 
         ///<inheritdoc/>
-        public InvalidKeyException(string message) : base(message) {}
+        public InvalidKeyException(string message) : base(message) { }
 
         ///<inheritdoc/>
-        public InvalidKeyException(string message, Exception innerException) : base(message, innerException) {}
+        public InvalidKeyException(string message, Exception innerException) : base(message, innerException) { }
 
         ///<inheritdoc/>
-        protected InvalidKeyException(SerializationInfo message, StreamingContext context) : base(message, context) {}
+        protected InvalidKeyException(SerializationInfo message, StreamingContext context) : base(message, context) { }
 
         const string BaseInvalidKeyMessageFormat = "{0}, Key={1}, Type={2}";
 
@@ -163,7 +164,7 @@ namespace UnityEngine.AddressableAssets
             HashSet<Type> typesAvailableForKey = GetTypesForKey(keyString);
             if (typesAvailableForKey.Count == 0)
                 return $"{base.Message} No Location found for Key={keyString}";
-            
+
             if (typesAvailableForKey.Count == 1)
             {
                 Type availableType = null;
@@ -173,7 +174,7 @@ namespace UnityEngine.AddressableAssets
                     return string.Format(BaseInvalidKeyMessageFormat, base.Message, keyString, Type);
                 return $"{base.Message} No Asset found with for Key={keyString}. Key exists as Type={availableType}, which is not assignable from the requested Type={Type}";
             }
-            
+
             StringBuilder csv = new StringBuilder(512);
             int count = 0;
             foreach (Type type in typesAvailableForKey)
@@ -193,100 +194,100 @@ namespace UnityEngine.AddressableAssets
             switch (MergeMode)
             {
                 case Addressables.MergeMode.Union:
-                {
-                    messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} of Assets between {keysCSV} with Type={Type}");
-                    
-                    Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
-                    foreach (string key in keys)
                     {
-                        if (!GetTypeToKeys(key, typeToKeys))
-                            messageBuilder.Append(string.Format(NoLocationLineMessage, key));
-                    }
+                        messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} of Assets between {keysCSV} with Type={Type}");
 
-                    foreach (KeyValuePair<Type, List<string>> pair in typeToKeys)
-                    {
-                        string availableKeysString = GetCSVString(pair.Value, "Key=", "Keys=");
-                        List<string> unavailableKeys = new List<string>();
+                        Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
                         foreach (string key in keys)
                         {
-                            if (!pair.Value.Contains(key))
-                                unavailableKeys.Add(key);
+                            if (!GetTypeToKeys(key, typeToKeys))
+                                messageBuilder.Append(string.Format(NoLocationLineMessage, key));
                         }
 
-                        if (unavailableKeys.Count == 0)
-                            messageBuilder.Append($"\nUnion of Type={pair.Key} found with {availableKeysString}");
-                        else
+                        foreach (KeyValuePair<Type, List<string>> pair in typeToKeys)
                         {
-                            string unavailableKeysString = GetCSVString(unavailableKeys, "Key=", "Keys=");
-                            messageBuilder.Append($"\nUnion of Type={pair.Key} found with {availableKeysString}. Without {unavailableKeysString}");
+                            string availableKeysString = GetCSVString(pair.Value, "Key=", "Keys=");
+                            List<string> unavailableKeys = new List<string>();
+                            foreach (string key in keys)
+                            {
+                                if (!pair.Value.Contains(key))
+                                    unavailableKeys.Add(key);
+                            }
+
+                            if (unavailableKeys.Count == 0)
+                                messageBuilder.Append($"\nUnion of Type={pair.Key} found with {availableKeysString}");
+                            else
+                            {
+                                string unavailableKeysString = GetCSVString(unavailableKeys, "Key=", "Keys=");
+                                messageBuilder.Append($"\nUnion of Type={pair.Key} found with {availableKeysString}. Without {unavailableKeysString}");
+                            }
                         }
                     }
-                }
                     break;
 
                 case Addressables.MergeMode.Intersection:
-                {
-                    messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} of Assets between {keysCSV} with Type={Type}");
-
-                    bool hasInvalidKeys = false;
-                    Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
-                    foreach (string key in keys)
                     {
-                        if (!GetTypeToKeys(key, typeToKeys))
+                        messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} of Assets between {keysCSV} with Type={Type}");
+
+                        bool hasInvalidKeys = false;
+                        Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
+                        foreach (string key in keys)
                         {
-                            hasInvalidKeys = true;
-                            messageBuilder.Append(string.Format(NoLocationLineMessage, key));
+                            if (!GetTypeToKeys(key, typeToKeys))
+                            {
+                                hasInvalidKeys = true;
+                                messageBuilder.Append(string.Format(NoLocationLineMessage, key));
+                            }
+                        }
+                        if (hasInvalidKeys)
+                            break;
+
+                        foreach (KeyValuePair<Type, List<string>> pair in typeToKeys)
+                        {
+                            if (pair.Value.Count == keys.Count)
+                                messageBuilder.Append($"\nAn Intersection exists for Type={pair.Key}");
                         }
                     }
-                    if (hasInvalidKeys)
-                        break;
-                    
-                    foreach (KeyValuePair<Type,List<string>> pair in typeToKeys)
-                    {
-                        if (pair.Value.Count == keys.Count)
-                            messageBuilder.Append($"\nAn Intersection exists for Type={pair.Key}");
-                    }
-                }
                     break;
-                
+
                 case Addressables.MergeMode.UseFirst:
-                {
-                    messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} Asset within {keysCSV} with Type={Type}");
-
-                    Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
-                    foreach (string key in keys)
                     {
-                        if (!GetTypeToKeys(key, typeToKeys))
-                            messageBuilder.Append(string.Format(NoLocationLineMessage, key));
-                    }
+                        messageBuilder = new StringBuilder($"{base.Message} No {MergeMode.Value} Asset within {keysCSV} with Type={Type}");
 
-                    string keyCSV;
-                    foreach (KeyValuePair<Type,List<string>> pair in typeToKeys)
-                    {
-                        keyCSV = GetCSVString(pair.Value, "Key=", "Keys=");
-                        messageBuilder.Append($"\nType={pair.Key} exists for {keyCSV}");
+                        Dictionary<Type, List<string>> typeToKeys = new Dictionary<Type, List<string>>();
+                        foreach (string key in keys)
+                        {
+                            if (!GetTypeToKeys(key, typeToKeys))
+                                messageBuilder.Append(string.Format(NoLocationLineMessage, key));
+                        }
+
+                        string keyCSV;
+                        foreach (KeyValuePair<Type, List<string>> pair in typeToKeys)
+                        {
+                            keyCSV = GetCSVString(pair.Value, "Key=", "Keys=");
+                            messageBuilder.Append($"\nType={pair.Key} exists for {keyCSV}");
+                        }
                     }
-                }
                     break;
             }
             return messageBuilder.ToString();
         }
-        
+
         HashSet<Type> GetTypesForKey(string keyString)
         {
             HashSet<Type> typesAvailableForKey = new HashSet<Type>();
-            foreach (var locator in  m_Addressables.ResourceLocators)
+            foreach (var locator in m_Addressables.ResourceLocators)
             {
                 if (!locator.Locate(keyString, null, out var locations))
                     continue;
-                        
+
                 foreach (IResourceLocation location in locations)
                     typesAvailableForKey.Add(location.ResourceType);
             }
 
             return typesAvailableForKey;
         }
-        
+
         bool GetTypeToKeys(string key, Dictionary<Type, List<string>> typeToKeys)
         {
             HashSet<Type> types = GetTypesForKey(key);
@@ -296,13 +297,13 @@ namespace UnityEngine.AddressableAssets
             foreach (Type type in types)
             {
                 if (!typeToKeys.TryGetValue(type, out List<string> keysForType))
-                    typeToKeys.Add(type, new List<string>() {key});
+                    typeToKeys.Add(type, new List<string>() { key });
                 else
                     keysForType.Add(key);
             }
             return true;
         }
-        
+
         string GetCSVString(IEnumerable<string> enumerator, string prefixSingle, string prefixPlural)
         {
             StringBuilder keysCSVBuilder = new StringBuilder(prefixPlural);
