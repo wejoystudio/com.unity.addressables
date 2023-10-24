@@ -184,8 +184,7 @@ namespace UnityEditor.AddressableAssets.GUI
             GUILayout.Space(8);
             if (GUILayout.Button("Manage Groups", "Minibutton", GUILayout.ExpandWidth(true)))
             {
-                AddressableAssetSettingsDefaultObject.Settings = m_AasTarget;
-                AddressableAssetsWindow.Init();
+                AddressableAssetsWindow.Init(m_AasTarget);
             }
 
             GUILayout.Space(12);

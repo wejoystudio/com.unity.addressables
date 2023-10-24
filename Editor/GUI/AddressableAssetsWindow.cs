@@ -40,6 +40,23 @@ namespace UnityEditor.AddressableAssets.GUI
             window.minSize = new Vector2(430, 250);
             window.Show();
         }
+        static AddressableAssetsWindow activeWindow = null;
+        internal static void Init(AddressableAssetSettings target)
+        {
+            if (activeWindow != null)
+            {
+                activeWindow.Close();
+                activeWindow = null;
+            }
+            AddressableAssetSettingsDefaultObject.Settings = target;
+
+            var window = GetWindow<AddressableAssetsWindow>();
+            window.titleContent = new GUIContent($"Addressables Groups: {target.profileSettings.GetProfileName(target.activeProfileId)}");
+            window.minSize = new Vector2(430, 250);
+            window.Show();
+
+            activeWindow = window;
+        }
 
         public static Vector2 GetWindowPosition()
         {
