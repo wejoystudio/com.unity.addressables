@@ -308,7 +308,7 @@ namespace UnityEditor.AddressableAssets.Tests.AnalyzeRules
             //Test
             rule.FixIssues(Settings);
 
-            var path = "Assets/addressables_content_state.bin";
+            var path = "Assets/addressables_content_state.json";
             Assert.DoesNotThrow(() =>
             {
                 ContentUpdateScript.GatherModifiedEntries(Settings, path);

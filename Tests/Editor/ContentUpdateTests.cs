@@ -39,7 +39,7 @@ namespace UnityEditor.AddressableAssets.Tests
             var op = Settings.ActivePlayerDataBuilder.BuildData<AddressablesPlayerBuildResult>(context);
 
             Assert.IsTrue(string.IsNullOrEmpty(op.Error), op.Error);
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var cacheData = ContentUpdateScript.LoadContentState(tempPath);
             Assert.NotNull(cacheData);
             Settings.RemoveGroup(group);
@@ -71,7 +71,7 @@ namespace UnityEditor.AddressableAssets.Tests
             var op = Settings.ActivePlayerDataBuilder.BuildData<AddressablesPlayerBuildResult>(context);
 
             Assert.IsTrue(string.IsNullOrEmpty(op.Error), op.Error);
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var cacheData = ContentUpdateScript.LoadContentState(tempPath);
             Assert.NotNull(cacheData);
             Assert.NotNull(cacheData.cachedInfos.FirstOrDefault(s => s.asset.guid.ToString() == m_AssetGUID));
@@ -80,7 +80,7 @@ namespace UnityEditor.AddressableAssets.Tests
             context = new AddressablesDataBuilderInput(Settings);
             op = Settings.ActivePlayerDataBuilder.BuildData<AddressablesPlayerBuildResult>(context);
             Assert.IsTrue(string.IsNullOrEmpty(op.Error), op.Error);
-            tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             cacheData = ContentUpdateScript.LoadContentState(tempPath);
             Assert.NotNull(cacheData);
             Assert.IsNull(cacheData.cachedInfos.FirstOrDefault(s => s.asset.guid.ToString() == m_AssetGUID));
@@ -120,7 +120,7 @@ namespace UnityEditor.AddressableAssets.Tests
             obj.GetComponent<Transform>().SetPositionAndRotation(new Vector3(10, 10, 10), Quaternion.identity);
             PrefabUtility.SavePrefabAsset(obj);
             AssetDatabase.SaveAssets();
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var modifiedEntries = ContentUpdateScript.GatherModifiedEntries(Settings, tempPath);
             Assert.IsNotNull(modifiedEntries);
             Assert.GreaterOrEqual(modifiedEntries.Count, 1);
@@ -177,7 +177,7 @@ namespace UnityEditor.AddressableAssets.Tests
             AssetDatabase.SaveAssets();
 
             // Test
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/Library/com.unity.addressables/" + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/Library/com.unity.addressables/" + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var modifiedEntries = ContentUpdateScript.GatherModifiedEntries(Settings, tempPath);
 
             Assert.AreEqual(1, modifiedEntries.Count);
@@ -239,7 +239,7 @@ namespace UnityEditor.AddressableAssets.Tests
             AssetDatabase.SaveAssets();
 
             // Test
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/Library/com.unity.addressables/" + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/Library/com.unity.addressables/" + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var modifiedEntries = ContentUpdateScript.GatherModifiedEntries(Settings, tempPath);
 
             Assert.AreEqual(2, modifiedEntries.Count);
@@ -443,7 +443,7 @@ namespace UnityEditor.AddressableAssets.Tests
             var origLocator = GetLocatorFromCatalog(op.FileRegistry.GetFilePaths());
             Assert.NotNull(origLocator);
 
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             var contentState = ContentUpdateScript.LoadContentState(tempPath);
             Assert.NotNull(contentState);
             Assert.NotNull(contentState.cachedBundles);
@@ -540,7 +540,7 @@ namespace UnityEditor.AddressableAssets.Tests
             var op = Settings.ActivePlayerDataBuilder.BuildData<AddressablesPlayerBuildResult>(context);
 
             Assert.IsTrue(string.IsNullOrEmpty(op.Error), op.Error);
-            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.bin";
+            var tempPath = Path.GetDirectoryName(Application.dataPath) + "/" + Addressables.LibraryPath + PlatformMappingService.GetPlatformPathSubFolder() + "/addressables_content_state.json";
             ContentUpdateScript.BuildContentUpdate(Settings, tempPath);
             Assert.IsTrue(Directory.Exists(Addressables.BuildPath));
             Settings.BuildRemoteCatalog = oldSetting;
@@ -664,7 +664,7 @@ namespace UnityEditor.AddressableAssets.Tests
                         guid = new GUID(contentUpdateTestAssetGUID),
                         hash = Hash128.Parse(contentUpdateTestCachedAssetHash)
                     },
-                    dependencies = new AssetState[] {},
+                    dependencies = new AssetState[] { },
                     data = null,
                     groupGuid = contentUpdateTestGroupGuid
                 }

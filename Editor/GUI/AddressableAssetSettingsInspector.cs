@@ -97,7 +97,7 @@ namespace UnityEditor.AddressableAssets.GUI
             m_ContentUpdateHeader = new GUIContent("Content Update", "Settings affect profiles.");
             m_DownloadsHeader = new GUIContent("Downloads", "Settings affect profiles.");
             m_BuildHeader = new GUIContent("Build", "Settings affect profiles.");
-            
+
             m_DataBuildersHeader = new GUIContent("Build and Play Mode Scripts", "Settings affect profiles.");
             m_GroupTemplateObjectsHeader = new GUIContent("Asset Group Templates", "Settings affect profiles.");
             m_InitObjectsHeader = new GUIContent("Initialization Objects", "Settings affect profiles.");
@@ -148,7 +148,7 @@ namespace UnityEditor.AddressableAssets.GUI
         GUIContent m_IgnoreUnsupportedFilesInBuild =
             new GUIContent("Ignore Invalid/Unsupported Files in Build", "If enabled, files that cannot be built will be ignored.");
         GUIContent m_ContentStateFileBuildPath =
-            new GUIContent("Content State Build Path", "The path used for saving the addressables_content_state.bin file. If empty, this will be the addressable settings config folder in your project.");
+            new GUIContent("Content State Build Path", "The path used for saving the addressables_content_state.json file. If empty, this will be the addressable settings config folder in your project.");
         GUIContent m_ShaderBundleNaming =
             new GUIContent("Shader Bundle Naming Prefix", "This setting determines how the Unity built in shader bundle will be named during the build.  The recommended setting is Project Name Hash.");
         GUIContent m_ShaderBundleCustomNaming =
@@ -173,7 +173,7 @@ namespace UnityEditor.AddressableAssets.GUI
         {
             return true;
         }
-        
+
         public override void OnInspectorGUI()
         {
             m_QueuedChanges.Clear();
@@ -324,7 +324,7 @@ namespace UnityEditor.AddressableAssets.GUI
             if (BuildFoldout.IsActive)
             {
 #if UNITY_2021_2_OR_NEWER
-                int index = (int) m_AasTarget.BuildAddressablesWithPlayerBuild;
+                int index = (int)m_AasTarget.BuildAddressablesWithPlayerBuild;
                 int newIndex = EditorGUILayout.Popup(m_BuildAddressablesWithPlayerBuild, index, new[]
                 {
                     "Use global Settings (stored in preferences)",
@@ -342,7 +342,7 @@ namespace UnityEditor.AddressableAssets.GUI
                     }
                 }
 #endif
-                
+
                 bool ignoreUnsupportedFilesInBuild = EditorGUILayout.Toggle(m_IgnoreUnsupportedFilesInBuild, m_AasTarget.IgnoreUnsupportedFilesInBuild);
                 if (ignoreUnsupportedFilesInBuild != m_AasTarget.IgnoreUnsupportedFilesInBuild)
                     m_QueuedChanges.Add(() => m_AasTarget.IgnoreUnsupportedFilesInBuild = ignoreUnsupportedFilesInBuild);
@@ -435,7 +435,7 @@ namespace UnityEditor.AddressableAssets.GUI
             EditorGUI.EndFoldoutHeaderGroup();
 
 #if UNITY_2019_4_OR_NEWER
-            CCDEnabledFoldout.IsActive = AddressablesGUIUtility.BeginFoldoutHeaderGroupWithHelp(CCDEnabledFoldout.IsActive, m_CCDEnabledHeader,() =>
+            CCDEnabledFoldout.IsActive = AddressablesGUIUtility.BeginFoldoutHeaderGroupWithHelp(CCDEnabledFoldout.IsActive, m_CCDEnabledHeader, () =>
             {
                 string url = AddressableAssetUtility.GenerateDocsURL("AddressablesCCD.html");
                 Application.OpenURL(url);
@@ -572,8 +572,8 @@ namespace UnityEditor.AddressableAssets.GUI
                 Debug.LogWarningFormat("Path at {0} is not an Asset of this project.", assetPath);
                 return;
             }
-            
-            string relativePath = assetPath.Remove(0, Application.dataPath.Length-6);
+
+            string relativePath = assetPath.Remove(0, Application.dataPath.Length - 6);
             var templateObj = AssetDatabase.LoadAssetAtPath<ScriptableObject>(relativePath);
             if (templateObj == null)
             {

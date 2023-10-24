@@ -89,7 +89,7 @@ namespace UnityEditor.AddressableAssets.Settings
         public const string kRemoteLoadPath = "Remote.LoadPath";
 
         private const string kLocalGroupTypePrefix = "Built-In";
-        internal static string LocalGroupTypePrefix => kLocalGroupTypePrefix; 
+        internal static string LocalGroupTypePrefix => kLocalGroupTypePrefix;
         /// <summary>
         /// Default value of local build path.
         /// </summary>
@@ -100,7 +100,7 @@ namespace UnityEditor.AddressableAssets.Settings
         public const string kLocalLoadPathValue = "{UnityEngine.AddressableAssets.Addressables.RuntimePath}/[BuildTarget]";
 
         private const string kEditorHostedGroupTypePrefix = "Editor Hosted";
-        internal static string EditorHostedGroupTypePrefix => kEditorHostedGroupTypePrefix; 
+        internal static string EditorHostedGroupTypePrefix => kEditorHostedGroupTypePrefix;
         /// <summary>
         /// Default value of remote build path.
         /// </summary>
@@ -643,17 +643,17 @@ namespace UnityEditor.AddressableAssets.Settings
         [SerializeField]
         private string m_ContentStateBuildPath = "";
         /// <summary>
-        /// The path used for saving the addressables_content_state.bin file.  If empty, this will be the addressable settings config folder in your project.
+        /// The path used for saving the addressables_content_state.json file.  If empty, this will be the addressable settings config folder in your project.
         /// </summary>
         public string ContentStateBuildPath
         {
             get { return m_ContentStateBuildPath; }
             set { m_ContentStateBuildPath = value; }
         }
-        
+
         [SerializeField]
         private PlayerBuildOption m_BuildAddressablesWithPlayerBuild = PlayerBuildOption.DoNotBuildWithPlayer;
-        
+
         /// <summary>
         /// Defines if Addressables content will be built along with a Player build. (Requires 2021.2 or above)
         /// </summary>
@@ -665,7 +665,7 @@ namespace UnityEditor.AddressableAssets.Settings
         public PlayerBuildOption BuildAddressablesWithPlayerBuild
         {
             get { return m_BuildAddressablesWithPlayerBuild; }
-            set { m_BuildAddressablesWithPlayerBuild = value;  }
+            set { m_BuildAddressablesWithPlayerBuild = value; }
         }
 
         internal string GetContentStateBuildPath()
@@ -1412,7 +1412,7 @@ namespace UnityEditor.AddressableAssets.Settings
                 // TODO: Uncomment after initial opt-in testing period
                 //aa.ContiguousBundles = true;
                 aa.BuildAddressablesWithPlayerBuild = PlayerBuildOption.PreferencesValue;
-                
+
                 if (isPersisted)
                 {
                     Directory.CreateDirectory(configFolder);
@@ -1688,7 +1688,7 @@ namespace UnityEditor.AddressableAssets.Settings
                 string path = AssetDatabase.GUIDToAssetPath(guid);
                 if (!AddressableAssetUtility.IsPathValidForEntry(path))
                     return null;
-                
+
                 // try find non-implicit first
                 foreach (var g in groups)
                 {
@@ -1699,7 +1699,7 @@ namespace UnityEditor.AddressableAssets.Settings
                             return foundEntry;
                     }
                 }
-                
+
                 // go through all collections
                 foreach (var g in groups)
                 {
